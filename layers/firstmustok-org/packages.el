@@ -210,6 +210,7 @@
       (setq org-agenda-file-gtd (expand-file-name "gtd.org" org-agenda-dir))
       (setq org-agenda-file-journal (expand-file-name "journal.org" org-agenda-dir))
       (setq org-agenda-file-code-snippet (expand-file-name "snippet.org" org-agenda-dir))
+      (setq org-agenda-file-work (expand-file-name "works.org" org-agenda-dir))
       (setq org-default-notes-file (expand-file-name "gtd.org" org-agenda-dir))
       (setq org-agenda-files (list org-agenda-dir))
 
@@ -234,7 +235,7 @@
               ("s" "Code Snippet" entry
                (file org-agenda-file-code-snippet)
                "* %?\t%^g\n#+BEGIN_SRC %^{language}\n\n#+END_SRC")
-              ("w" "work" entry (file+headline org-agenda-file-gtd "Cocos2D-X")
+              ("w" "work" entry (file+headline org-agenda-file-work "Works")
                "* TODO [#A] %?\n  %i\n %U"
                :empty-lines 1)
               ("c" "Chrome" entry (file+headline org-agenda-file-note "Quick notes")
@@ -268,8 +269,9 @@
       ;org
       (with-eval-after-load 'org
         (setq org-todo-keywords
-              '((sequence "TODO(t)" "|" "DONE")
+              '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d!/!)")
                 (sequence "REPORT(r)" "BUG(b)" "KNOWNCAUSE(k)" "|" "FIXED(f)")
+                (sequence "WAITING(w@/!)" "SOMEDAY(S)" "|" "CANCELLED(c@/!)" "MEETING(m)" "PHONE(p)")
                 (sequence "NEW(n)" "DEV(d@)" "UAT(u@)" "PROD(p@/!)" "|" "DONE")))
         (setq org-todo-keyword-faces
               '(("TODO" . org-warning)
