@@ -16,6 +16,8 @@
     (org :location built-in)
     org-pomodoro
     deft
+    ;; chinese lunar calender
+    cal-china-x
     ;; org-tree-slide
     ;; ox-reveal
     ;; worf
@@ -401,4 +403,9 @@ holding contextual information."
     (setq deft-recursive t)
     (setq deft-extension "org")
     (setq deft-directory deft-dir)))
+
+(defun firstmustok-org/init-cal-china-x ()
+  (use-package cal-china-x
+    :init
+    (setq mark-holidays-in-calendar t)))
 ;;; packages.el ends here
