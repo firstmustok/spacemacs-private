@@ -19,12 +19,17 @@
     ;; chinese lunar calender
     cal-china-x
     ;; org-tree-slide
-    ;; ox-reveal
     ;; worf
     ;; org-download
     ;; plain-org-wiki
     )
   )
+
+(defun firstmustok-org/init-org ()
+  (progn
+    (require 'org)
+    (add-to-list 'org-modules 'org-protocol)
+    (require 'org-protocol)))
 
 (defun firstmustok-org/post-init-org-pomodoro ()
   (progn
@@ -45,7 +50,6 @@
         "," 'org-priority)
       (require 'org-compat)
       (require 'org)
-      ;; (add-to-list 'org-modules "org-habit")
       (add-to-list 'org-modules 'org-habit)
       (require 'org-habit)
 
@@ -84,10 +88,6 @@
       (setq org-crypt-key nil)
 
       ;; (add-to-list 'auto-mode-alist '("\.org\\'" . org-mode))
-
-      (setq org-todo-keywords
-            (quote ((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d!/!)")
-                    (sequence "WAITING(w@/!)" "SOMEDAY(S)" "|" "CANCELLED(c@/!)" "MEETING(m)" "PHONE(p)"))))
 
       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
             ;; Org clock
@@ -221,6 +221,29 @@
         (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode
           "." 'spacemacs/org-agenda-transient-state/body)
         )
+
+      ;; Kill the frame if one was created for the capture
+      (defvar kk/delete-frame-after-capture 0 "Whether to delete the last frame after the current capture")
+
+      (defun kk/delete-frame-if-neccessary (&rest r)
+        (cond
+         ((= kk/delete-frame-after-capture 0) nil)
+         ((> kk/delete-frame-after-capture 1)
+          (setq kk/delete-frame-after-capture (- kk/delete-frame-after-capture 1)))
+         (t
+          (setq kk/delete-frame-after-capture 0)
+          (delete-frame))))
+
+      (defun transform-square-brackets-to-round-ones(string-to-transform)
+        "Transforms [ into ( and ] into ), other chars left unchanged."
+        (concat 
+         (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
+        )
+
+      (advice-add 'org-capture-finalize :after 'kk/delete-frame-if-neccessary)
+      (advice-add 'org-capture-kill :after 'kk/delete-frame-if-neccessary)
+      (advice-add 'org-capture-refile :after 'kk/delete-frame-if-neccessary)
+
       ;; the %i would copy the selected text into the template
       ;;http://www.howardism.org/Technical/Emacs/journaling-org.html
       ;;add multi-file journal
@@ -240,8 +263,14 @@
               ("w" "work" entry (file+headline org-agenda-file-work "Works")
                "* TODO [#A] %?\n  %i\n %U"
                :empty-lines 1)
-              ("c" "Chrome" entry (file+headline org-agenda-file-note "Quick notes")
-               "* TODO [#C] %?\n %(firstmustok/retrieve-chrome-current-tab-url)\n %i\n %U"
+              ;; ("c" "Chrome" entry (file+headline org-agenda-file-note "Quick notes")
+              ;;  "* TODO [#C] %?\n %(firstmustok/retrieve-chrome-current-tab-url)\n %i\n %U"
+              ;;  :empty-lines 1)
+              ("c" "Chrome capture" entry (file+headline org-agenda-file-note "Quick notes")
+               "* %?%:description\n%u from: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n"
+               :empty-lines 1)
+              ("p" "Chrome capture without capture" entry (file+headline org-agenda-file-note "Quick notes")
+               "* %?%:description\nsource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\nCaptured on:%u\n"
                :empty-lines 1)
               ("l" "links" entry (file+headline org-agenda-file-note "Quick notes")
                "* TODO [#C] %?\n  %i\n %a \n %U"
@@ -269,18 +298,34 @@
                 ))))
 
       ;org
-      (with-eval-after-load 'org
-        (setq org-todo-keywords
-              '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d!/!)")
-                (sequence "REPORT(r)" "BUG(b)" "KNOWNCAUSE(k)" "|" "FIXED(f)")
-                (sequence "WAITING(w@/!)" "SOMEDAY(S)" "|" "CANCELLED(c@/!)" "MEETING(m)" "PHONE(p)")
-                (sequence "NEW(n)" "DEV(d@)" "UAT(u@)" "PROD(p@/!)" "|" "DONE")))
-        (setq org-todo-keyword-faces
-              '(("TODO" . org-warning)
-                ("NEW" . "yellow")
-                ("UAT" . "yellow")
-                ("PROD"  . (:foreground "blue" :weight bold))))
-        )
+      (setq org-todo-keywords
+            '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d!/!)")
+              (sequence "REPORT(r)" "BUG(b)" "KNOWNCAUSE(k)" "|" "FIXED(f)")
+              (sequence "WAITING(w@/!)" "SOMEDAY(S)" "|" "CANCELLED(c@/!)" "MEETING(m)" "PHONE(p)")
+              (sequence "NEW(n)" "DEV(d@)" "UAT(u@)" "PROD(p@/!)" "|" "DONE")))
+      (setq org-todo-keyword-faces
+            '(("TODO" . org-warning)
+              ("NEW" . "yellow")
+              ("UAT" . "yellow")))
+
+      ; Tags with fast selection keys
+      (setq org-tag-alist (quote ((:startgroup)
+                                  ("@errand" . ?e)
+                                  ("@office" . ?o)
+                                  ("@home" . ?H)
+                                  ("@farm" . ?f)
+                                  (:endgroup)
+                                  ("WAITING" . ?w)
+                                  ("HOLD" . ?h)
+                                  ("PERSONAL" . ?P)
+                                  ("WORK" . ?W)
+                                  ("FARM" . ?F)
+                                  ("ORG" . ?O)
+                                  ("NORANG" . ?N)
+                                  ("crypt" . ?E)
+                                  ("NOTE" . ?n)
+                                  ("CANCELLED" . ?c)
+                                  ("FLAGGED" . ??))))
 
       (add-hook 'org-after-todo-statistics-hook 'firstmustok/org-summary-todo)
 
@@ -370,15 +415,10 @@ holding contextual information."
 
       )))
 
-(defun firstmustok-org/post-init-ox-reveal ()
-  (setq org-reveal-root "file:///Users/guanghui/.emacs.d/reveal-js"))
-
-
 (defun firstmustok-org/init-org-tree-slide ()
   (use-package org-tree-slide
     :init
     (spacemacs/set-leader-keys "oto" 'org-tree-slide-mode)))
-
 
 (defun firstmustok-org/init-org-download ()
   (use-package org-download
@@ -408,4 +448,5 @@ holding contextual information."
   (use-package cal-china-x
     :init
     (setq mark-holidays-in-calendar t)))
+
 ;;; packages.el ends here
