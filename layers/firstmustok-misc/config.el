@@ -43,3 +43,6 @@
 
 
 (setq user-mail-address "linux.whu@gmail.com")
+
+(defvar add-node-modules-path-debug nil
+  "Enable verbose output when non nil.")

@@ -451,7 +451,7 @@ you should place you code here."
   (require 'org-protocol)
 
   ;; for flycheck-javascript-eslint
-  (add-hook 'flycheck-mode-hook #'firstmustok/use-eslint-from-node-modules)
+  (add-hook 'flycheck-mode-hook #'firstmustok/add-node-modules-path)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
