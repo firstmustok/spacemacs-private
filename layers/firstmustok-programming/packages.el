@@ -2,7 +2,7 @@
 ;;
 ;; Copyright (c) 2014-2016 firstmustok
 ;;
-;; Author: firstmustok <guanghui8827@gmail.com>
+;; Author: firstmustok <linux.whu@gmail.com>
 ;; URL: https://github.com/firstmustok/spacemacs-private
 ;;
 ;; This file is not part of GNU Emacs.
@@ -32,7 +32,7 @@
         lua-mode
         (cc-mode :location built-in)
         ;; flycheck-clojure
-        etags-select
+        (etags-select :location (recipe :fetcher github :repo "emacsmirror/etags-selects"))
         (python :location built-in)
         (emacs-lisp :location built-in)
         ;; clojure-mode
@@ -429,7 +429,7 @@
 
 
     ;; http://stackoverflow.com/questions/23553881/emacs-indenting-of-c11-lambda-functions-cc-mode
-    (defadvice c-lineup-arglist (around my activate)
+    (defadvice c-lineup-arglist (langelem my activate)
       "Improve indentation of continued C++11 lambda function opened as argument."
       (setq ad-return-value
             (if (and (equal major-mode 'c++-mode)
