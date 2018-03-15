@@ -11,7 +11,7 @@
 
 (setq firstmustok-misc-packages
       '(
-        helm-github-stars
+        ;; helm-github-stars
         helm
         projectile
         find-file-in-project
@@ -20,11 +20,11 @@
         visual-regexp-steroids
         command-log
         evil
-        fcitx
+        ;; fcitx
         discover-my-major
         ace-window
         avy
-        4clojure
+        ;; 4clojure
         persp-mode
         tiny
         ;; smartparens
@@ -40,6 +40,8 @@
         ranger
         golden-ratio
         (highlight-global :location (recipe :fetcher github :repo "glen-dai/highlight-global"))
+        (prettier-js :location (recipe :fetcher github :repo "prettier/prettier-emacs"))
+        ;; (prettier-eslint :location (recipe :fetcher github :repo "evindor/prettier-eslint-emacs"))
         browse-at-remote
         ))
 
@@ -780,3 +782,16 @@
         (evil-define-key 'normal markdown-mode-map (kbd "TAB") 'markdown-cycle)
         ))
     ))
+
+(defun firstmustok-misc/init-prettier-js ()
+  (use-package prettier-js
+    :init
+    (progn
+      (add-hook 'web-mode-hook #'prettier-js-mode))))
+
+;; (defun firstmustok-misc/init-prettier-eslint ()
+;;   (use-package prettier-eslint
+;;     :init
+;;     (progn
+;;       (eval-after-load 'web-mode
+;;         (add-hook 'web-mode-hook (lambda () (add-hook 'after-save-hook 'prettier-eslint nil t)))))))
