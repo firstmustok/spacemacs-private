@@ -16,17 +16,26 @@
       '(
         (dart-mode :location (recipe :fetcher github :repo "nex3/dart-mode"))
         (smali-mode :location (recipe :fetcher github :repo "strazzere/Emacs-Smali"))
-
-        '(google-c-style)
+        (google-c-style)
         ))
 
 (defun firstmustok-programming/init-dart-mode ()
-  (progn
-    (setq dart-enable-analysis-server t)
-    (add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-mode))
-    (spacemacs/set-leader-keys-for-major-mode 'dart-mode
-      "gg" 'dart-goto
-      "tq" 'ert)))
+  (use-package dart-mode
+    :defer t
+    :init
+    (progn
+      (add-hook 'dart-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+      (add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-mode))
+
+      (spacemacs/declare-prefix-for-mode 'dart-mode "mc" "compile")
+      (spacemacs/declare-prefix-for-mode 'dart-mode "mg" "find-symbol")
+      (spacemacs/set-leader-keys
+      ;; (spacemacs/set-leader-keys-for-major-mode 'dart-mode
+          "mj" 'dart-jump-to-defn
+          "mf" 'dartfmt
+          "mi" 'dart-imports
+          "ms" 'dart-sort-members
+          "mg" 'dart-goto))))
 
 (defun firstmustok-programming/init-smali-mode ()
   (use-package smali-mode
