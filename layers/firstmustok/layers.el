@@ -11,7 +11,7 @@
 
 (configuration-layer/declare-layers '(
                                       firstmustok-misc
-                                      ;; firstmustok-programming
+                                      firstmustok-programming
                                       ;; firstmustok-ui
                                       firstmustok-org
                                       ;; firstmustok-better-defaults

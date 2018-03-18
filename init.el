@@ -62,7 +62,7 @@ values."
      ;; spell-checking
      syntax-checking
      git
-     version-control
+     ;; version-control
 
      ;;maven --selfs
      ;; maven
