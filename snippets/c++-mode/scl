@@ -1,0 +1,17 @@
+#name : singleton class define
+# key: scl
+# expand-env: ((yas-indent-line 'fixed))
+# --
+class ${1:`(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`}
+{
+public:
+	virtual ~$1();
+	static $1* instance();
+
+protected:
+	$1(${2});
+
+private:
+	static $1* s_instance;
+	${0:/* data */}
+};

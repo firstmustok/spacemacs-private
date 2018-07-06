@@ -1,0 +1,56 @@
+#name : Generate pfo template
+# key: gpfo
+# expand-env: ((yas-indent-line 'fixed))
+# --
+#include "pfo.h"
+
+using namespace std;
+using namespace stock;
+
+namespace stock{
+
+class ${1:`(mapconcat 'capitalize (cons "C" (split-string (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "_")) "")`} : public IPfo
+{
+public:
+    $1 (${2:});
+    virtual ~$1 ();
+
+    virtual DWORD initialize(CParaStream& para);
+    virtual DWORD notify(Object*& pOutput);
+
+private:
+    ${0:/* data */}
+};
+
+} /*end stock */
+
+$1::$1()
+{
+}
+
+$1::~$1()
+{
+}
+
+DWORD $1::initialize(CParaStream& param)
+{
+    if(1 > para.getCount())
+    {
+        SLOG_ERROR("Initialize dfo param error, not enough data!");
+        return ERR_FAILURE;
+    }
+    int resultLen;
+    para >> resultLen;
+
+    return ERR_SUCCESS;
+}
+
+DWORD $1::notify(Object*& pOutput)
+{
+    return ERR_SUCCESS;
+}
+
+ASTS_PLUGIN_INIT(stock::$1, "pfo description", "version 1.0");
+
+//period : PLUGIN_FIVE_MIN, PLUGIN_HALF_HOURLY, PLUGIN_HOURLY, PLUGIN_DAILY, PLUGIN_WEEKLY, 
+//ASTS_PLUGIN_INIT_PERIOD(stock::$1, PLUGIN_DAILY, "dfo description", "version 1.0");

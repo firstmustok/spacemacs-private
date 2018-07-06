@@ -1,0 +1,5 @@
+#name : style attributes
+# key: style
+# expand-env: ((yas-indent-line 'fixed))
+# --
+style={[${1:container},]} 

@@ -1,0 +1,7 @@
+#name : use strict
+# key: use
+# expand-env: ((yas-indent-line 'fixed))
+# --
+'use strict';
+
+${1:""}

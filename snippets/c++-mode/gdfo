@@ -1,0 +1,81 @@
+#name : Generate Dfo Template 
+# key: gdfo
+# expand-env: ((yas-indent-line 'fixed))
+# --
+#include "dfo.h"
+
+using namespace std;
+
+namespace stock{
+
+class ${1:`(mapconcat 'capitalize (cons "C" (split-string (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "_")) "")`} : public IDfo
+{
+public:
+    $1 (${2:});
+    virtual ~$1 ();
+
+    //isUpdate = true.
+    virtual DWORD computeOne(bool flag = 1);
+    virtual DWORD initialize(CParaStream& para);
+    virtual DWORD clear();
+
+private:
+    ${0:/* data */}
+};
+
+} /*end stock */
+
+using namespace stock;
+
+$1::$1()
+{
+}
+
+$1::~$1()
+{
+    clear();
+}
+
+DWORD $1::initialize(CParaStream& param)
+{
+    if(1 > para.getCount())
+    {
+        SLOG_ERROR("Initialize dfo param error, not enough data!");
+        return ERR_FAILURE;
+    }
+    int resultLen;
+    para >> resultLen;
+
+    return ERR_SUCCESS;
+}
+
+DWORD $1::computeOne(bool flag)
+{
+    //TODO: template code
+    //PRD_DATA_TYPE dailyData = get(REDIS_DAILY_DATA, 1);
+    //if(IS_DATA_INVALID(dailyData, 1))
+    //{
+    //    SLOG_DEBUG("Compute dfo error, not enough data : " << getStockCode());
+    //    return ERR_FAILURE;
+    //}
+    //MarketObject* pDaily = (MarketObject*) (dailyData->at(0));
+
+    //CDailyAtrVO vo;
+    //vo.atr       = atr;
+    //vo.lastClose = pDaily->lastClose;
+    //vo.tradetime = pDaily->tradetime;
+    //save(${4:REDIS_DAILY_ATR_DATA}, vo, flag);
+
+    return ERR_SUCCESS;
+}
+
+DWORD $1::clear()
+{
+    return clearData($4);
+}
+
+ASTS_PLUGIN_INIT(stock::$1, "dfo description", "version 1.0");
+
+//period : PLUGIN_FIVE_MIN, PLUGIN_HALF_HOURLY, PLUGIN_HOURLY, PLUGIN_DAILY, PLUGIN_WEEKLY, 
+//ASTS_PLUGIN_INIT_PERIOD(stock::$1, PLUGIN_DAILY, "dfo description", "version 1.0");
+

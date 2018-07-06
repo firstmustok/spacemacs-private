@@ -1,0 +1,51 @@
+#name : Generate Risk Template 
+# key: grisk
+# expand-env: ((yas-indent-line 'fixed))
+# --
+#include "platform/risk/CRisk.h"
+
+using namespace std;
+
+namespace stock{
+namespace risk {
+
+class ${1:`(mapconcat 'capitalize (cons "C" (split-string (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "_")) "")`} : public CRisk
+{
+public:
+    $1 (${2:});
+    virtual ~$1 ();
+
+    virtual DWORD initialize(CParameter& param);
+    virtual RiskStatus check(CRiskData& data);
+
+private:
+    ${0:/* data */}
+};
+
+} /*end risk */
+} /*end stock */
+
+using namespace stock;
+using namespace stock::risk;
+
+$1::$1()
+{
+}
+
+$1::~$1()
+{
+}
+
+DWORD $1::initialize(CParameter& param)
+{
+    float example = param.getValue<float>("example", 0.5);
+    return ERR_SUCCESS;
+}
+
+RiskStatus $1::check(CRiskData& data)
+{
+    return RISK_PASS_CHECK;
+}
+
+ASTS_PLUGIN_RISK_INIT(stock::risk::$1, "risk ", "version 1.0");
+

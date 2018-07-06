@@ -1,0 +1,9 @@
+#name : RN List View
+# key: list
+# --
+<ListView
+  dataSource=${1: this.state.dataSource}
+  renderRow=${2: this.renderRow}
+  renderHeader=${3: this.renderHeader}
+  renderSeparator=${4: this.renderSeparator}
+/>

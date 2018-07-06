@@ -1,0 +1,52 @@
+#name : Generate cmd file for Auto Stock
+# key: gcmd
+# expand-env: ((yas-indent-line 'fixed))
+# --
+#include "platform/cmd/command.h"
+
+using namespace std;
+
+namespace stock{
+namespace cmd {
+
+class ${1:`(mapconcat 'capitalize (cons "C" (split-string (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "_")) "")`} : public Command
+{
+public:
+    $1 (${2:});
+    virtual ~$1 ();
+
+    virtual DWORD execute();
+
+private:
+    ${0:/* data */}
+};
+
+} /*end cmd */
+} /*end stock */
+
+using namespace stock;
+using namespace stock::cmd; 
+$1::$1()
+{
+}
+
+$1::~$1()
+{
+}
+
+DWORD $1::execute()
+{
+    ParamConfig paramList[] =
+    {
+        {"para", true},
+    };
+
+    DWORD dwRet = checkParam(paramList, LENGTH(paramList));
+    CHECK_NOT_RETURN(ERR_SUCCESS, dwRet, dwRet);
+
+    JSONValue data;
+    return setData(data);
+}
+
+ASTS_CMD_INIT(stock::cmd::$1, "command description", "version 1.0");
+

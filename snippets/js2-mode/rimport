@@ -1,0 +1,10 @@
+#name : React import
+# key: rimport
+# expand-env: ((yas-indent-line 'fixed))
+# --
+import React, {
+  Component,
+  View,
+  Text,
+  ${1:""}
+} from 'react-native';

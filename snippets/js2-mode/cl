@@ -1,0 +1,42 @@
+#name : RN class define
+# key: cl
+# expand-env: ((yas-indent-line 'fixed))
+# --
+'use strict';
+
+import React, {
+  Component,
+  StyleSheet,
+  View,
+  Text
+} from 'react-native';
+
+class ${1:`(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`} extends ${2: Component} {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ${3: name} : ${4: "value"},
+    };
+  }
+
+  componentDidMount() {
+    this.setState({
+    });
+  }
+
+  render() {
+    return (
+      <View>
+        <Text> Nothing </Text>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
+
+module.exports = $1;
