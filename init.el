@@ -468,7 +468,10 @@ you should place you code here."
 
   ;; for flycheck-javascript-eslint
   (add-hook 'flycheck-mode-hook #'firstmustok/add-node-modules-path)
-  )
+
+  ;; set the yas-snnipets path
+  (setq auto-completion-private-snippets-directory "~/.spacemacs.d/snippets")
+)
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
